@@ -1,3 +1,4 @@
+"use client";
 import { useClientOnly } from "@/hooks/use-client-only";
 import React from "react";
 

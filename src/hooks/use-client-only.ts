@@ -1,12 +1,13 @@
+"use client";
 import { useState } from "react";
 import { useEffectOnce } from "react-use";
 
 export const useClientOnly = () => {
-    const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-    useEffectOnce(() => {
-        setLoaded(true);
-    });
+  useEffectOnce(() => {
+    setLoaded(true);
+  });
 
-    return loaded;
+  return loaded;
 };

@@ -173,6 +173,10 @@ export async function getOrCreateCombination(
     combinationRecord.item2.name
   );
 
+  if (newResult == null) {
+    return null;
+  }
+
   const newCombination: CombinationResult = {
     item1: combinationRecord.item1,
     item2: combinationRecord.item2,
@@ -192,12 +196,13 @@ export async function requestCombinationFromOpenAi(
   name2: string
 ) {
   const defaultPrompt = [
-    "You are an assistant for a game that when given 2 items you must respond with a new item and description that is the combination of the 2 items.",
-    "You must respond with the new item first, then a comma, then the description of the new item.",
-    "The new item must be a combination of the 2 words given.",
-    "The new item must not be more than 2 words long.",
-    "The new item must be a real thing and not something made up",
-    "The description of the new item must not be longer than 10 words",
+    "You are an assistant for a game that when given 2 things you must respond with a new things and description that is the combination of the 2 items.",
+    "You must respond with the new things first, then a comma, then the description of the new things.",
+    "The new things must be a combination of the 2 words given.",
+    "The new things must not be more than 2 words long.",
+    "The new things must be a real thing and not something made up",
+    "The description of the new things must not be longer than 10 words",
+    "If the combination does not result in a real thing, respond with one of the original things",
   ];
   const prompt = [...defaultPrompt, `Item 1 is ${name1}`, `Item 2 is ${name2}`];
   const response = await createChatCompletion(prompt);
@@ -205,6 +210,9 @@ export async function requestCombinationFromOpenAi(
   // Get up to the first comma
   const responseParts = response.split(",");
   const newItemName = responseParts[0].trim();
+  if (newItemName.toLowerCase() === "na") {
+    return null;
+  }
   // Description is everything after the comma
   const description = responseParts.slice(1).join(",").trim();
   const newItemData = {
